@@ -1,4 +1,28 @@
+import React from "react";
 import { IBase } from "../../core/models/core.model";
+
+export interface IProducts {
+  orderId: string;
+  itemName: string;
+  price: number;
+  quantity: number;
+  itemImage: string;
+  total: number;
+}
+export interface ICartItemsContext {
+  cartItems: IProducts[];
+  setCartItems: React.Dispatch<React.SetStateAction<IProducts[]>>;
+}
+
+export interface ICartTotal {
+  totalQuantities: number;
+  subTotal: number;
+}
+
+export interface ICartTotalContext {
+  total: ICartTotal | null;
+  setTotal: React.Dispatch<React.SetStateAction<ICartTotal | null>>;
+}
 
 // Start Food categories
 export interface Category {
