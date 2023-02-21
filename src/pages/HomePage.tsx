@@ -1,40 +1,52 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { ICategory, IMeal } from "../shared/models/food.model";
+import foodServices from "../shared/services/food.service";
 import { CartContext, CartTotalContext } from "../core/context";
 import { IProducts } from "../shared/models/food.model";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
+import { v4 as uuidv4 } from "uuid";
+import Footer from "../components/Footer";
+import MealCard from "../components/MealCard";
 
 const HomePage = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
-  const { total, setTotal } = useContext(CartTotalContext);
-  // const { cartSubTotal } = useContext(CartSubTotalContext);
+  const { setTotal } = useContext(CartTotalContext);
 
-  const products: IProducts[] = [
-    {
-      itemImage: "image",
-      itemName: "Chicken Biryani",
-      price: 60,
-      quantity: 2,
-      orderId: "123abc",
-      total: 60 * 2,
-    },
-    {
-      itemImage: "image",
-      itemName: "Chicken Tikka Masala",
-      price: 80 * 1,
+  const [allCategories, setAllCategories] = useState<ICategory[]>([]);
+  const [mealForCategory, setMealForCategory] = useState<IMeal[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Beef");
+
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const next = () => {
+    if (menuRef.current) {
+      menuRef.current.scrollLeft += 200;
+    }
+  };
+  const prev = () => {
+    if (menuRef.current) {
+      menuRef.current.scrollLeft -= 200;
+    }
+  };
+
+  const addToCart = (product: IMeal) => {
+    const productToAdd: IProducts = {
+      itemId: +product.idMeal,
+      itemImage: product.strMealThumb,
+      itemName: product.strMeal,
+      price: product.price,
       quantity: 1,
-      orderId: "123def",
-      total: 80 * 1,
-    },
-  ];
-
-  const addToCart = (product: IProducts) => {
+      orderId: uuidv4(),
+      total: product.price,
+    };
     const existingIndex = cartItems.findIndex(
-      (prod) => prod.orderId === product.orderId
+      (prod) => prod.itemId === productToAdd.itemId
     );
     if (existingIndex === -1) {
       setCartItems((prev) => {
-        return [...prev, product];
+        return [...prev, productToAdd];
       });
     } else {
       const copyCart = [...cartItems];
@@ -45,15 +57,32 @@ const HomePage = () => {
     }
   };
 
-  const deleteItem = (orderId: string) => {
-    const copyCart = [...cartItems];
-    const index = copyCart.findIndex((prod) => prod.orderId === orderId);
-    copyCart.splice(index, 1);
-    setCartItems(copyCart);
+  const getAllCategories = () => {
+    foodServices.getCategories().then((res) => {
+      setAllCategories(res.data.categories);
+    });
+  };
+
+  const getAllMealsForCategory = (category: string) => {
+    foodServices.getAllMealsForSpecificCategory(category).then((res) => {
+      const mealData =
+        res.data.meals.length > 7 ? res.data.meals.slice(0, 8) : [];
+      if (res.data.meals.length > 7) {
+        const updatedMealData = [...mealData].map((data) => {
+          return { ...data, price: Math.floor(Math.random() * 41 + 10) * 10 };
+        });
+        setMealForCategory(updatedMealData);
+      } else {
+        setMealForCategory(res.data.meals);
+      }
+    });
   };
 
   useEffect(() => {
-    console.log(cartItems, "run");
+    getAllCategories();
+  }, []);
+
+  useEffect(() => {
     const copyCart = [...cartItems];
     setTotal({
       totalQuantities: cartQuantitiesTotal(copyCart),
@@ -62,31 +91,150 @@ const HomePage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
 
+  useEffect(() => {
+    getAllMealsForCategory(selectedCategory);
+  }, [selectedCategory]);
+
   return (
-    <div className="space-y-5 mt-6 p-5">
-      {cartItems &&
-        cartItems.length > 0 &&
-        cartItems.map((item) => (
-          <div key={Math.random()} className="space-y-2">
-            <p>image: {item.itemImage}</p>
-            <p>name: {item.itemName}</p>
-            <p>price: {item.price}</p>
-            <p>quantity: {item.quantity}</p>
-            <p>order id:{item.orderId}</p>
-            <p>total:{item.total}</p>
-            <button onClick={() => deleteItem(item.orderId)}>delete</button>
+    <div className="flex-grow h-full mt-20">
+      {/* Start Hero Section */}
+      <div className="bg-primary">
+        <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 flex justify-between items-center space-x-5">
+          <div className="space-y-10">
+            <h1 className="font-extrabold text-4xl lg:text-5xl lg:w-[20ch] tracking-wider lg:leading-[60px]">
+              Just don’t wait for the right moment, order your food just now
+            </h1>
+            <button
+              onClick={() =>
+                menuRef.current &&
+                menuRef.current.scrollIntoView({ behavior: "smooth" })
+              }
+              className="bg-red-600 px-4 py-3 rounded-md hover:rounded-3xl transition-all text-white w-52"
+            >
+              Order Now
+            </button>
           </div>
-        ))}
-      <p>Total: {total?.totalQuantities}</p>
-      <p>Sub Total: {total?.subTotal}</p>
-      <button
-        onClick={() => {
-          const randomNumber: number = Math.floor(Math.random() * 2);
-          addToCart(products[randomNumber]);
-        }}
-      >
-        Add
-      </button>
+          <figure className="w-full min-w-[320px] hidden sm:block">
+            <img
+              className="w-full h-full"
+              src="/images/hero_illustration.png"
+              alt=""
+            />
+          </figure>
+        </div>
+      </div>
+      {/* End Hero Section */}
+      {/* Start Services section */}
+      <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 h-96 flex flex-col justify-center items-center space-y-10">
+        <p className="text-4xl font-bold relative before:absolute before:w-28 before:-bottom-2 before:h-1 before:bg-red-600 before:rounded-lg">
+          Services
+        </p>
+        <div className="flex justify-evenly items-center space-x-5 w-full">
+          <figure className="flex flex-col items-center">
+            <img src="/images/order_online.png" alt="Order Online" />
+            <figcaption className="font-bold text-sm mt-3">
+              Order Online
+            </figcaption>
+          </figure>
+          <figure className="flex flex-col items-center">
+            <img src="/images/order_preperation.png" alt="Order Preparation" />
+            <figcaption className="font-bold text-sm mt-3">
+              Order Preparation
+            </figcaption>
+          </figure>
+          <figure className="flex flex-col items-center">
+            <img src="/images/order_handover.png" alt="Order Handover" />
+            <figcaption className="font-bold text-sm mt-3">
+              Order Handover
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+      {/* End Services section */}
+      {/* Start Menu section */}
+      <div className="bg-primary">
+        <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-10 flex flex-col space-y-16 overflow-hidden relative">
+          <div>
+            {/* Start Next Button */}
+            <button
+              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full left-8 top-[245px] text-xs"
+              onClick={prev}
+            >
+              &lt;
+            </button>
+            {/* End Next Button */}
+            {/* Start Previous Button */}
+            <button
+              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full right-8 top-[245px] text-xs"
+              onClick={next}
+            >
+              &gt;
+            </button>
+            {/* End Previous Button */}
+          </div>
+          <p className="text-4xl font-bold text-center relative before:absolute before:w-28 before:-bottom-2 before:h-1 before:bg-red-600 before:rounded-lg">
+            Our Menu
+          </p>
+          <div
+            ref={menuRef}
+            className="flex items-center space-x-8 overflow-x-auto scrollbar-none"
+          >
+            {allCategories &&
+              allCategories.map((category) => (
+                <button
+                  className={`${
+                    selectedCategory === category.strCategory
+                      ? "bg-red-500 p-2 rounded-lg text-white"
+                      : "rounded-lg text-black p-2"
+                  }`}
+                  key={Math.random()}
+                  onClick={() => {
+                    setSelectedCategory(category.strCategory);
+                    setMealForCategory([]);
+                  }}
+                >
+                  <figure className="flex flex-col items-center w-full h-full">
+                    <img
+                      className="w-full h-full min-w-[90px] max-w-[90px] rounded-full"
+                      src={category.strCategoryThumb}
+                      alt="Order Online"
+                    />
+                    <figcaption className="font-bold text-sm mt-3">
+                      {category.strCategory}
+                    </figcaption>
+                  </figure>
+                </button>
+              ))}
+          </div>
+          <div className="bg-white p-5 sm:p-10 rounded-xl">
+            {mealForCategory.length === 0 && (
+              <p className="text-xl font-semibold text-center p-5">Loading...</p>
+            )}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
+              {mealForCategory &&
+                mealForCategory.map((meal) => (
+                  <MealCard
+                    meal={meal}
+                    addToCart={addToCart}
+                    key={Math.random()}
+                  />
+                ))}
+            </div>
+            <div className="flex justify-center mt-10">
+              <Link
+                to={`/allProducts/${selectedCategory}`}
+                className="w-52 bg-red-500 text-white px-6 py-2 text-center rounded-lg"
+              >
+                See All
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* End Menu section */}
+      {/* Start Footer */}
+      <Footer />
+      {/* End Footer */}
     </div>
   );
 };

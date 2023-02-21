@@ -2,10 +2,7 @@ import { useMemo, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import "./App.css";
-import {
-  CartContext,
-  CartTotalContext,
-} from "./core/context";
+import { CartContext, CartTotalContext } from "./core/context";
 import {
   AllProducts,
   Cart,
@@ -33,7 +30,7 @@ function App() {
   const cartTotalState = useMemo(
     () => ({
       total,
-      setTotal
+      setTotal,
     }),
     [total]
   );
@@ -43,12 +40,12 @@ function App() {
       <CartTotalContext.Provider value={cartTotalState}>
         <div className="w-full h-full flex flex-col">
           <Navbar />
-          <div className="flex-grow h-full">
+          <div className="flex-grow h-full flex flex-col">
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signUp" element={<SignUp />} />
-              <Route path="/allProducts" element={<AllProducts />} />
+              <Route path="/allProducts/:category" element={<AllProducts />} />
               <Route path="/productDetails" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/myOrders" element={<MyOrders />} />
