@@ -6,6 +6,12 @@ module.exports = {
       colors: {
         primary: "#feeae0",
       },
+      maxWidth: {
+        baseWidth: "88rem",
+      },
+    },
+    fontFamily: {
+      sans: ["Poppins", "sans-serif"],
     },
   },
   plugins: [],

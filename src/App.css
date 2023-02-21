@@ -1,0 +1,9 @@
+.scrollbar-none::-webkit-scrollbar{
+    display: none;
+}
+.scrollbar-none{
+    scroll-behavior: smooth;
+}
+.thead, .tbody{
+    @apply p-3
+}

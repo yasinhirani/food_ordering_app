@@ -2,6 +2,7 @@ import React from "react";
 import { IBase } from "../../core/models/core.model";
 
 export interface IProducts {
+  itemId: number;
   orderId: string;
   itemName: string;
   price: number;
@@ -25,25 +26,26 @@ export interface ICartTotalContext {
 }
 
 // Start Food categories
-export interface Category {
+export interface ICategory {
   idCategory: string;
   strCategory: string;
   strCategoryThumb: string;
   strCategoryDescription: string;
 }
 export interface ICategories {
-  categories: Category[];
+  categories: ICategory[];
 }
 // End Food categories
 
 // Start all meals for specific category
-export interface Meal {
+export interface IMeal {
+  price: number;
   strMeal: string;
   strMealThumb: string;
   idMeal: string;
 }
 export interface IMeals {
-  meals: Meal[];
+  meals: IMeal[];
 }
 // End all meals for specific category
 
