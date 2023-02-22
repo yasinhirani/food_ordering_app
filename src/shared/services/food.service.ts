@@ -9,7 +9,7 @@ const getAllMealsForSpecificCategory = (category: string): Promise<IMealsRes> =>
   return foodAxios.get(`/filter.php?c=${category}`);
 };
 
-const getMealDetails = (id: string): Promise<IMealDetailsRes> => {
+const getMealDetails = (id: number): Promise<IMealDetailsRes> => {
   return foodAxios.get(`/lookup.php?i=${id}`);
 };
 

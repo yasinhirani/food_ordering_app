@@ -1,11 +1,22 @@
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
 import { CartContext, CartTotalContext } from "../core/context";
+import { IProducts } from "../shared/models/food.model";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
+
+interface IOrder extends IProducts {
+  userName: string;
+  userEmail: string;
+  step: string;
+  stepCount: number;
+}
 
 const Cart = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
   const { total, setTotal } = useContext(CartTotalContext);
+
+  const [initialRender, setInitialRender] = useState<boolean>(true);
 
   const increaseQuantity = (itemId: number) => {
     const copyCart = [...cartItems];
@@ -13,10 +24,6 @@ const Cart = () => {
     copyCart[index].quantity += 1;
     copyCart[index].total = copyCart[index].price * copyCart[index].quantity;
     setCartItems(copyCart);
-    setTotal({
-      subTotal: cartSubTotal(copyCart),
-      totalQuantities: cartQuantitiesTotal(copyCart),
-    });
   };
 
   const decreaseQuantity = (itemId: number) => {
@@ -25,10 +32,6 @@ const Cart = () => {
     copyCart[index].quantity -= 1;
     copyCart[index].total = copyCart[index].price * copyCart[index].quantity;
     setCartItems(copyCart);
-    setTotal({
-      subTotal: cartSubTotal(copyCart),
-      totalQuantities: cartQuantitiesTotal(copyCart),
-    });
   };
 
   const removeItem = (itemId: number) => {
@@ -36,11 +39,39 @@ const Cart = () => {
     const index = copyCart.findIndex((prod) => prod.itemId === itemId);
     copyCart.splice(index, 1);
     setCartItems(copyCart);
+  };
+
+  const placeOrder = () => {
+    const orders: IOrder[] = [...cartItems].map((items) => {
+      return {
+        ...items,
+        userName: "yasin",
+        userEmail: "yasin@gmail.com",
+        step: "Ordered Online",
+        stepCount: 1,
+      };
+    });
+    axios.post("http://localhost:8080/addOrders", orders).then((res) => {
+      if (res.data.success) {
+        setCartItems([]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    const copyCart = [...cartItems];
     setTotal({
       subTotal: cartSubTotal(copyCart),
       totalQuantities: cartQuantitiesTotal(copyCart),
     });
-  };
+    if (initialRender) {
+      setInitialRender(false);
+      return;
+    }
+    localStorage.setItem("products", JSON.stringify(copyCart));
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems]);
 
   return (
     <div className="flex-grow h-full w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 mt-20">
@@ -90,7 +121,9 @@ const Cart = () => {
                 </td>
                 <td className="tbody align-top">{item.total}</td>
                 <td className="tbody align-top">
-                  <button onClick={() => removeItem(item.itemId)}>Remove</button>
+                  <button onClick={() => removeItem(item.itemId)}>
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))}
@@ -103,7 +136,10 @@ const Cart = () => {
             <p className="font-semibold text-xl">
               Sub Total: {total?.subTotal}
             </p>
-            <button className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5">
+            <button
+              className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
+              onClick={() => placeOrder()}
+            >
               Pay and Place The Order
             </button>
           </div>
