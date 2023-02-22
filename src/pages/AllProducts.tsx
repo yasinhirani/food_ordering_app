@@ -15,6 +15,7 @@ const AllProducts = () => {
   const { setTotal } = useContext(CartTotalContext);
 
   const [allMeals, setAllMeals] = useState<IMeal[]>([]);
+  const [initialRender, setInitialRender] = useState<boolean>(true);
 
   const getAllMeals = (category: string) => {
     foodServices.getAllMealsForSpecificCategory(category).then((res) => {
@@ -55,6 +56,7 @@ const AllProducts = () => {
     if (category) {
       getAllMeals(category);
     }
+    return () => {};
   }, [category]);
 
   useEffect(() => {
@@ -63,8 +65,13 @@ const AllProducts = () => {
       totalQuantities: cartQuantitiesTotal(copyCart),
       subTotal: cartSubTotal(copyCart),
     });
-    console.log(cartItems);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (initialRender) {
+      setInitialRender(false);
+      return;
+    }
+    localStorage.setItem("products", JSON.stringify(copyCart));
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
 
   return (

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import "./App.css";
@@ -35,6 +35,16 @@ function App() {
     [total]
   );
 
+  useEffect(() => {
+    if (localStorage.getItem("products")) {
+      const products = JSON.parse(localStorage.products);
+      setCartItems(products);
+    } else {
+      setCartItems([]);
+    }
+    return () => {};
+  }, []);
+
   return (
     <CartContext.Provider value={cartItemsState}>
       <CartTotalContext.Provider value={cartTotalState}>
@@ -46,7 +56,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/signUp" element={<SignUp />} />
               <Route path="/allProducts/:category" element={<AllProducts />} />
-              <Route path="/productDetails" element={<ProductDetails />} />
+              <Route path="/productDetail/:id/:price" element={<ProductDetails />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/myOrders" element={<MyOrders />} />
             </Routes>

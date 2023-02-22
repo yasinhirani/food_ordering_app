@@ -12,7 +12,7 @@ const MealCard = ({meal, addToCart}: IProp) => {
 
   return (
     <div className="flex flex-col space-y-2" key={Math.random()}>
-      <Link to="/">
+      <Link to={`/productDetail/${meal.idMeal}/${window.btoa(meal.price.toString())}`}>
         <figure>
           <img src={strMealThumb} alt="" className="rounded-xl" />
         </figure>

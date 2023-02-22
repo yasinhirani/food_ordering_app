@@ -17,17 +17,19 @@ const HomePage = () => {
   const [allCategories, setAllCategories] = useState<ICategory[]>([]);
   const [mealForCategory, setMealForCategory] = useState<IMeal[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("Beef");
+  const [initialRender, setInitialRender] = useState<boolean>(true);
 
   const menuRef = useRef<HTMLDivElement>(null);
+  const categoryRef = useRef<HTMLDivElement>(null);
 
   const next = () => {
-    if (menuRef.current) {
-      menuRef.current.scrollLeft += 200;
+    if (categoryRef.current) {
+      categoryRef.current.scrollLeft += 200;
     }
   };
   const prev = () => {
-    if (menuRef.current) {
-      menuRef.current.scrollLeft -= 200;
+    if (categoryRef.current) {
+      categoryRef.current.scrollLeft -= 200;
     }
   };
 
@@ -80,6 +82,7 @@ const HomePage = () => {
 
   useEffect(() => {
     getAllCategories();
+    return () => {};
   }, []);
 
   useEffect(() => {
@@ -88,11 +91,18 @@ const HomePage = () => {
       totalQuantities: cartQuantitiesTotal(copyCart),
       subTotal: cartSubTotal(copyCart),
     });
+    if (initialRender) {
+      setInitialRender(false);
+      return;
+    }
+    localStorage.setItem("products", JSON.stringify(copyCart));
+    return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems]);
 
   useEffect(() => {
     getAllMealsForCategory(selectedCategory);
+    return () => {};
   }, [selectedCategory]);
 
   return (
@@ -102,7 +112,7 @@ const HomePage = () => {
         <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 flex justify-between items-center space-x-5">
           <div className="space-y-10">
             <h1 className="font-extrabold text-4xl lg:text-5xl lg:w-[20ch] tracking-wider lg:leading-[60px]">
-              Just don’t wait for the right moment, order your food just now
+              Just don’t wait for the right moment, order your food now.
             </h1>
             <button
               onClick={() =>
@@ -152,7 +162,7 @@ const HomePage = () => {
       </div>
       {/* End Services section */}
       {/* Start Menu section */}
-      <div className="bg-primary">
+      <div ref={menuRef} className="bg-primary">
         <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-10 flex flex-col space-y-16 overflow-hidden relative">
           <div>
             {/* Start Next Button */}
@@ -176,7 +186,7 @@ const HomePage = () => {
             Our Menu
           </p>
           <div
-            ref={menuRef}
+            ref={categoryRef}
             className="flex items-center space-x-8 overflow-x-auto scrollbar-none"
           >
             {allCategories &&
@@ -208,7 +218,9 @@ const HomePage = () => {
           </div>
           <div className="bg-white p-5 sm:p-10 rounded-xl">
             {mealForCategory.length === 0 && (
-              <p className="text-xl font-semibold text-center p-5">Loading...</p>
+              <p className="text-xl font-semibold text-center p-5">
+                Loading...
+              </p>
             )}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12">
               {mealForCategory &&
