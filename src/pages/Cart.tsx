@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { CartContext, CartTotalContext } from "../core/context";
+import { AuthContext, CartContext, CartTotalContext } from "../core/context";
 import { IProducts } from "../shared/models/food.model";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
@@ -15,6 +15,7 @@ interface IOrder extends IProducts {
 const Cart = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
   const { total, setTotal } = useContext(CartTotalContext);
+  const { authData } = useContext(AuthContext);
 
   const [initialRender, setInitialRender] = useState<boolean>(true);
 
@@ -75,10 +76,9 @@ const Cart = () => {
 
   return (
     <div className="flex-grow h-full w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 mt-20">
-      <h4 className="text-2xl font-bold">Your Shopping Cart</h4>
-      {cartItems.length === 0 && (
-        <h5 className="text-xl font-bold mt-10">Your Shopping Cart is empty</h5>
-      )}
+      <h4 className="text-2xl font-bold">
+        Your Shopping Cart {cartItems.length === 0 ? "is empty." : ""}
+      </h4>
       {cartItems.length > 0 && (
         <table className="w-full mt-10">
           <thead>
@@ -112,7 +112,8 @@ const Cart = () => {
                     </button>
                     <span>{item.quantity}</span>
                     <button
-                      className="font-semibold text-xl"
+                      className="font-semibold text-xl disabled:text-gray-400 disabled:cursor-not-allowed"
+                      disabled={item.quantity > 4}
                       onClick={() => increaseQuantity(item.itemId)}
                     >
                       +
@@ -136,12 +137,26 @@ const Cart = () => {
             <p className="font-semibold text-xl">
               Sub Total: {total?.subTotal}
             </p>
-            <button
-              className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
-              onClick={() => placeOrder()}
-            >
-              Pay and Place The Order
-            </button>
+            {authData === null && (
+              <p className="font-semibold text-base mt-2">
+                Almost there, login to place the order
+              </p>
+            )}
+            {authData !== null ? (
+              <button
+                className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
+                onClick={() => placeOrder()}
+              >
+                Pay and Place The Order
+              </button>
+            ) : (
+              <button
+                className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
+                onClick={() => placeOrder()}
+              >
+                Login
+              </button>
+            )}
           </div>
         </div>
       )}

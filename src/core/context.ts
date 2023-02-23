@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { IAuthContext } from "../shared/models/auth.model";
 import {
   ICartItemsContext,
   ICartTotalContext,
@@ -11,4 +12,8 @@ export const CartContext = createContext<ICartItemsContext>({
 export const CartTotalContext = createContext<ICartTotalContext>({
   total: null,
   setTotal: () => {},
+});
+export const AuthContext = createContext<IAuthContext>({
+  authData: null,
+  setAuthData: () => {},
 });
