@@ -45,10 +45,14 @@ const AllProducts = () => {
       });
     } else {
       const copyCart = [...cartItems];
-      copyCart[existingIndex].quantity += 1;
-      copyCart[existingIndex].total =
-        copyCart[existingIndex].price * copyCart[existingIndex].quantity;
-      setCartItems(copyCart);
+      if (copyCart[existingIndex].quantity > 4) {
+        console.log("Only 5 quantity for a product can be added at a time");
+      } else {
+        copyCart[existingIndex].quantity += 1;
+        copyCart[existingIndex].total =
+          copyCart[existingIndex].price * copyCart[existingIndex].quantity;
+        setCartItems(copyCart);
+      }
     }
   };
 

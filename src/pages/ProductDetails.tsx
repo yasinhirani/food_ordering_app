@@ -43,10 +43,17 @@ const ProductDetails = () => {
       });
     } else {
       const copyCart = [...cartItems];
-      copyCart[existingIndex].quantity += quantity;
-      copyCart[existingIndex].total =
-        copyCart[existingIndex].price * copyCart[existingIndex].quantity;
-      setCartItems(copyCart);
+      if (
+        copyCart[existingIndex].quantity > 4 ||
+        copyCart[existingIndex].quantity + quantity > 5
+      ) {
+        console.log("Only 5 quantity for a product can be added at a time");
+      } else {
+        copyCart[existingIndex].quantity += quantity;
+        copyCart[existingIndex].total =
+          copyCart[existingIndex].price * copyCart[existingIndex].quantity;
+        setCartItems(copyCart);
+      }
     }
   };
 
@@ -115,7 +122,8 @@ const ProductDetails = () => {
                   </button>
                   <span className="font-semibold">{quantity}</span>
                   <button
-                    className="font-semibold text-xl"
+                    className="font-semibold text-xl disabled:text-gray-400 disabled:cursor-not-allowed"
+                    disabled={quantity > 4}
                     onClick={() => setQuantity((prev) => prev + 1)}
                   >
                     +

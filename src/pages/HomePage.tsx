@@ -52,10 +52,14 @@ const HomePage = () => {
       });
     } else {
       const copyCart = [...cartItems];
-      copyCart[existingIndex].quantity += 1;
-      copyCart[existingIndex].total =
-        copyCart[existingIndex].price * copyCart[existingIndex].quantity;
-      setCartItems(copyCart);
+      if (copyCart[existingIndex].quantity > 4) {
+        console.log("Only 5 quantity for a product can be added at a time");
+      } else {
+        copyCart[existingIndex].quantity += 1;
+        copyCart[existingIndex].total =
+          copyCart[existingIndex].price * copyCart[existingIndex].quantity;
+        setCartItems(copyCart);
+      }
     }
   };
 
@@ -75,7 +79,10 @@ const HomePage = () => {
         });
         setMealForCategory(updatedMealData);
       } else {
-        setMealForCategory(res.data.meals);
+        const updatedMealData = [...res.data.meals].map((data) => {
+          return { ...data, price: Math.floor(Math.random() * 41 + 10) * 10 };
+        });
+        setMealForCategory(updatedMealData);
       }
     });
   };
@@ -167,7 +174,7 @@ const HomePage = () => {
           <div>
             {/* Start Next Button */}
             <button
-              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full left-8 top-[245px] text-xs"
+              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full left-2 md:left-8 top-[245px] text-xs"
               onClick={prev}
             >
               &lt;
@@ -175,7 +182,7 @@ const HomePage = () => {
             {/* End Next Button */}
             {/* Start Previous Button */}
             <button
-              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full right-8 top-[245px] text-xs"
+              className="bg-red-400 hover:bg-red-600 text-white absolute w-8 h-8 rounded-full right-2 md:right-8 top-[245px] text-xs"
               onClick={next}
             >
               &gt;
