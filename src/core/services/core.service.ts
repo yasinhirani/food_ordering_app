@@ -7,7 +7,7 @@ const foodAxios = axios.create({
 });
 
 const privateAxios = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: "https://yasin-food-ordering-app.vercel.app/api",
 });
 
 privateAxios.interceptors.request.use(

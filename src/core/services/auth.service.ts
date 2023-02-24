@@ -2,10 +2,18 @@ import axios from "axios";
 import { ILoginRes, IRegisterRes } from "../../shared/models/auth.model";
 
 const login = (email: string, password: string): Promise<ILoginRes> => {
-  return axios.post("http://localhost:8080/api/login", {
-    userEmail: email,
-    password: password,
-  });
+  return axios.post(
+    "https://yasin-food-ordering-app.vercel.app/api/login",
+    {
+      userEmail: email,
+      password: password,
+    },
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 const register = (
@@ -13,7 +21,7 @@ const register = (
   email: string,
   password: string
 ): Promise<IRegisterRes> => {
-  return axios.post("http://localhost:8080/api/register", {
+  return axios.post("https://yasin-food-ordering-app.vercel.app/api/register", {
     userName: name,
     userEmail: email,
     password: password,
