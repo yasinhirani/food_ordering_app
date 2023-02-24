@@ -1,4 +1,4 @@
-import axios from "axios";
+import { privateAxios } from "../../core/services/core.service";
 import {
   IAddOrdersRes,
   IAllOrdersRes,
@@ -9,24 +9,23 @@ import {
 } from "../models/orders.model";
 
 const getAllOrders = (): Promise<IAllOrdersRes> => {
-  return axios.get("http://localhost:8080/getAllOrders");
+  return privateAxios.get("/getAllOrders");
 };
 
 const getAllUserOrders = (email: string): Promise<IUserOrdersRes> => {
-  return axios.post("http://localhost:8080/getUserOrders", {
+  return privateAxios.post("/getUserOrders", {
     userEmail: email,
   });
 };
 
-const placeOrder = (items: IOrder[], email: string): Promise<IAddOrdersRes> => {
-  return axios.post("http://localhost:8080/addOrders", {
+const placeOrder = (items: IOrder[]): Promise<IAddOrdersRes> => {
+  return privateAxios.post("/addOrders", {
     items: items,
-    userEmail: email,
   });
 };
 
 const updateStep = (values: IUpdateStep): Promise<IUpdateStepRes> => {
-  return axios.post("http://localhost:8080/updateStep", values);
+  return privateAxios.post("/updateStep", values);
 };
 
 const OrdersService = {

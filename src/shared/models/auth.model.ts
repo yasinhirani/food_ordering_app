@@ -5,6 +5,7 @@ export interface IAuthData {
   userEmail: string;
   userName: string;
   role: string;
+  access_token: string;
 }
 export interface IAuthContext {
   authData: IAuthData | null;

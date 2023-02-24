@@ -14,7 +14,6 @@ const Admin = () => {
   const updateStep = (values: IUpdateStep) => {
     if (values.stepCount === 1) {
       OrdersService.updateStep({
-        userEmail: values.userEmail,
         orderId: values.orderId,
         step: "Order Preparation",
         stepCount: 2,
@@ -22,7 +21,6 @@ const Admin = () => {
     }
     if (values.stepCount === 2) {
       OrdersService.updateStep({
-        userEmail: values.userEmail,
         orderId: values.orderId,
         step: "Ready for pickup",
         stepCount: 3,
@@ -30,7 +28,6 @@ const Admin = () => {
     }
     if (values.stepCount === 3) {
       OrdersService.updateStep({
-        userEmail: values.userEmail,
         orderId: values.orderId,
         step: "Order hand over",
         stepCount: 4,
@@ -82,7 +79,6 @@ const Admin = () => {
                       disabled={item.stepCount === 4}
                       onClick={() =>
                         updateStep({
-                          userEmail: item.userEmail,
                           orderId: item.orderId,
                           step: item.step,
                           stepCount: item.stepCount,
