@@ -1,9 +1,18 @@
-.scrollbar-none::-webkit-scrollbar{
-    display: none;
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
-.scrollbar-none{
-    scroll-behavior: smooth;
+.scrollbar-none {
+  scroll-behavior: smooth;
 }
-.thead, .tbody{
-    @apply p-3
+.thead,
+.tbody {
+  @apply p-3;
+}
+.user-order-grid {
+  grid-template-columns: repeat(4, minmax(0, auto));
+}
+@media screen and (max-width: 1024px) {
+  .user-order-grid {
+    grid-template-columns: repeat(2, minmax(0, auto));
+  }
 }
