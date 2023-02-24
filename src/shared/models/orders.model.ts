@@ -33,7 +33,6 @@ export interface IOrder extends IProducts {
 }
 
 export interface IUpdateStep {
-  userEmail: string;
   orderId: string;
   step: string;
   stepCount: number;

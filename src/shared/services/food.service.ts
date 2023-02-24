@@ -1,11 +1,17 @@
-import foodAxios from "../../core/services/core.service";
-import { ICategoriesRes, IMealDetailsRes, IMealsRes } from "../models/food.model";
+import { foodAxios } from "../../core/services/core.service";
+import {
+  ICategoriesRes,
+  IMealDetailsRes,
+  IMealsRes,
+} from "../models/food.model";
 
 const getCategories = (): Promise<ICategoriesRes> => {
   return foodAxios.get("/categories.php");
 };
 
-const getAllMealsForSpecificCategory = (category: string): Promise<IMealsRes> => {
+const getAllMealsForSpecificCategory = (
+  category: string
+): Promise<IMealsRes> => {
   return foodAxios.get(`/filter.php?c=${category}`);
 };
 

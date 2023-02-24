@@ -6,4 +6,19 @@ const foodAxios = axios.create({
   baseURL: BASE_URL,
 });
 
-export default foodAxios;
+const privateAxios = axios.create({
+  baseURL: "http://localhost:8080",
+});
+
+privateAxios.interceptors.request.use(
+  (req: any) => {
+    if (localStorage.authData) {
+      const token = JSON.parse(localStorage.authData);
+      req.headers.Authorization = `Bearer ${token.access_token}`;
+    }
+    return req;
+  },
+  (error) => Promise.reject(error)
+);
+
+export { foodAxios, privateAxios };

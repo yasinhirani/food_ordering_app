@@ -47,7 +47,7 @@ const Cart = () => {
           stepCount: 1,
         };
       });
-      OrdersService.placeOrder(orders, authData.userEmail).then((res) => {
+      OrdersService.placeOrder(orders).then((res) => {
         if (res.data.success) {
           setCartItems([]);
         }
