@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Formik, Form, Field } from "formik";
+import authServices from "../core/services/auth.service";
 import RegisterValidation from "../core/validations/resgiter.validation";
 
 interface IRegister {
@@ -16,14 +16,11 @@ const SignUp = () => {
     confirmPassword: "",
   };
   const handleSubmit = (values: IRegister) => {
-    const registerValue = {
-      userName: values.userName,
-      userEmail: values.email,
-      password: values.password,
-    };
-    axios.post("http://localhost:8080/api/register", registerValue).then((res) => {
-      console.log(res.data.message);
-    });
+    authServices
+      .register(values.userName, values.email, values.password)
+      .then((res) => {
+        console.log(res.data.message);
+      });
   };
   return (
     <div className="w-full p-6 flex justify-center">
