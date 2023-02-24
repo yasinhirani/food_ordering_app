@@ -1,17 +1,10 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext, CartContext, CartTotalContext } from "../core/context";
-import { IProducts } from "../shared/models/food.model";
+import { IOrder } from "../shared/models/orders.model";
+import OrdersService from "../shared/services/orders.service";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
-
-interface IOrder extends IProducts {
-  userName: string;
-  userEmail: string;
-  step: string;
-  stepCount: number;
-}
 
 const Cart = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
@@ -54,16 +47,11 @@ const Cart = () => {
           stepCount: 1,
         };
       });
-      axios
-        .post("http://localhost:8080/addOrders", {
-          items: orders,
-          userEmail: authData.userEmail,
-        })
-        .then((res) => {
-          if (res.data.success) {
-            setCartItems([]);
-          }
-        });
+      OrdersService.placeOrder(orders, authData.userEmail).then((res) => {
+        if (res.data.success) {
+          setCartItems([]);
+        }
+      });
     }
   };
 

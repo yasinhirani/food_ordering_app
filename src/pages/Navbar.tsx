@@ -69,6 +69,16 @@ const Navbar = () => {
                     {/* <Menu.Item>
                       <p className="border-b px-3 py-2">{authData}</p>
                     </Menu.Item> */}
+                    {authData.role === "admin" && (
+                      <Menu.Item>
+                        <Link
+                          to="/admin"
+                          className="w-full text-left px-3 py-2"
+                        >
+                          Admin
+                        </Link>
+                      </Menu.Item>
+                    )}
                     <Menu.Item>
                       <Link
                         to="/myOrders"
@@ -78,10 +88,7 @@ const Navbar = () => {
                       </Link>
                     </Menu.Item>
                     <Menu.Item>
-                      <Link
-                        to="/cart"
-                        className="w-full text-left px-3 py-2"
-                      >
+                      <Link to="/cart" className="w-full text-left px-3 py-2">
                         My Cart
                       </Link>
                     </Menu.Item>
@@ -101,7 +108,9 @@ const Navbar = () => {
                 </Transition>
               </Menu>
             ) : (
-              <Link to="/gettingStarted" className="font-semibold">Login</Link>
+              <Link to="/gettingStarted" className="font-semibold">
+                Login
+              </Link>
             )}
           </div>
         </div>

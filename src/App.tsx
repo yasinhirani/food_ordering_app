@@ -2,8 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import "./App.css";
-import ProtectedRoute from "./core/components/ProtectedRoute";
+import {
+  ProtectedRoute,
+  ProtectedRouteLogin,
+} from "./core/components/ProtectedRoute";
 import { AuthContext, CartContext, CartTotalContext } from "./core/context";
+import Admin from "./pages/admin/Admin";
 import {
   AllProducts,
   Cart,
@@ -13,6 +17,7 @@ import {
   ProductDetails,
   Auth,
 } from "./pages/index";
+import NotFound from "./pages/NotFound";
 import { IAuthData } from "./shared/models/auth.model";
 import { ICartTotal, IProducts } from "./shared/models/food.model";
 
@@ -71,7 +76,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route
                   path="/gettingStarted"
-                  element={<ProtectedRoute Component={Auth} />}
+                  element={<ProtectedRouteLogin Component={Auth} />}
                 />
                 <Route
                   path="/allProducts/:category"
@@ -82,7 +87,14 @@ function App() {
                   element={<ProductDetails />}
                 />
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/myOrders" element={<MyOrders />} />
+                <Route
+                  path="/myOrders"
+                  element={<ProtectedRoute Component={MyOrders} />}
+                />
+                {authData !== null && authData.role === "admin" && (
+                  <Route path="/admin" element={<Admin />} />
+                )}
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </div>
           </div>

@@ -1,8 +1,8 @@
-import axios from "axios";
 import { Formik, Field, Form } from "formik";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../core/context";
+import authServices from "../core/services/auth.service";
 import LoginValidation from "../core/validations/login.validation";
 
 interface ILogin {
@@ -20,11 +20,8 @@ const Login = () => {
   };
 
   const handleSubmit = (values: ILogin) => {
-    axios
-      .post("http://localhost:8080/api/login", {
-        userEmail: values.email.toLowerCase(),
-        password: values.password,
-      })
+    authServices
+      .login(values.email.toLowerCase(), values.password)
       .then((res) => {
         if (res.data.success) {
           // toast.success("Login Successful", ToastConfig);

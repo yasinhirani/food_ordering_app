@@ -1,30 +1,18 @@
-import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../core/context";
-
-interface IUserOrders {
-  orderId: string;
-  itemName: string;
-  itemImage: string;
-  quantity: number;
-  step: string;
-  stepCount: number;
-}
+import { IUserOrdersDetail } from "../shared/models/orders.model";
+import OrdersService from "../shared/services/orders.service";
 
 const MyOrders = () => {
   const { authData } = useContext(AuthContext);
 
-  const [userOrders, setUserOrders] = useState<IUserOrders[]>([]);
+  const [userOrders, setUserOrders] = useState<IUserOrdersDetail[]>([]);
 
   const getUserOrders = () => {
     if (authData) {
-      axios
-        .post("http://localhost:8080/getUserOrders", {
-          userEmail: authData?.userEmail,
-        })
-        .then((res) => {
-          setUserOrders(res.data.orders);
-        });
+      OrdersService.getAllUserOrders(authData?.userEmail).then((res) => {
+        setUserOrders(res.data.orders);
+      });
     }
   };
 
@@ -37,13 +25,15 @@ const MyOrders = () => {
       <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6">
         <div className="flex justify-between items-center space-x-5">
           <h2 className="font-bold text-3xl">Your Orders</h2>
-          <button
-            type="button"
-            className="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg"
-            onClick={() => getUserOrders()}
-          >
-            Refresh
-          </button>
+          {userOrders.length > 0 && (
+            <button
+              type="button"
+              className="bg-red-600 text-white font-semibold px-4 py-2 rounded-lg"
+              onClick={() => getUserOrders()}
+            >
+              Refresh
+            </button>
+          )}
         </div>
         <div className="flex flex-col space-y-5 mt-6">
           {userOrders &&
@@ -67,7 +57,7 @@ const MyOrders = () => {
                     </p>
                     <div className="grid user-order-grid gap-8 justify-start mt-6">
                       <div
-                        className={`flex flex-col items-center space-y-1 ${
+                        className={`flex flex-col items-center space-y-2 ${
                           orders.stepCount >= 1
                             ? "opacity-100 font-medium"
                             : "opacity-50 cursor-not-allowed"
@@ -80,10 +70,22 @@ const MyOrders = () => {
                             alt=""
                           />
                         </figure>
-                        <p className="text-xs font-semibold">Ordered Online</p>
+                        {orders.stepCount > 1 ? (
+                          <figure>
+                            <img
+                              className="w-4"
+                              src="/images/check.png"
+                              alt=""
+                            />
+                          </figure>
+                        ) : (
+                          <p className="text-xs font-semibold">
+                            Ordered Online
+                          </p>
+                        )}
                       </div>
                       <div
-                        className={`flex flex-col items-center space-y-1 ${
+                        className={`flex flex-col items-center space-y-2 ${
                           orders.stepCount >= 2
                             ? "opacity-100 font-medium"
                             : "opacity-50 cursor-not-allowed"
@@ -96,12 +98,22 @@ const MyOrders = () => {
                             alt=""
                           />
                         </figure>
-                        <p className="text-xs font-semibold">
-                          Ordered Perpetration
-                        </p>
+                        {orders.stepCount > 2 ? (
+                          <figure>
+                            <img
+                              className="w-4"
+                              src="/images/check.png"
+                              alt=""
+                            />
+                          </figure>
+                        ) : (
+                          <p className="text-xs font-semibold">
+                            Ordered Preparation
+                          </p>
+                        )}
                       </div>
                       <div
-                        className={`flex flex-col items-center space-y-1 ${
+                        className={`flex flex-col items-center space-y-2 ${
                           orders.stepCount >= 3
                             ? "opacity-100 font-medium"
                             : "opacity-50 cursor-not-allowed"
@@ -114,12 +126,22 @@ const MyOrders = () => {
                             alt=""
                           />
                         </figure>
-                        <p className="text-xs font-semibold">
-                          Ready for Pickup
-                        </p>
+                        {orders.stepCount > 3 ? (
+                          <figure>
+                            <img
+                              className="w-4"
+                              src="/images/check.png"
+                              alt=""
+                            />
+                          </figure>
+                        ) : (
+                          <p className="text-xs font-semibold">
+                            Ready for pickup
+                          </p>
+                        )}
                       </div>
                       <div
-                        className={`flex flex-col items-center space-y-1 ${
+                        className={`flex flex-col items-center space-y-2 ${
                           orders.stepCount === 4
                             ? "opacity-100 font-medium"
                             : "opacity-50 cursor-not-allowed"
@@ -132,15 +154,30 @@ const MyOrders = () => {
                             alt=""
                           />
                         </figure>
-                        <p className="text-xs font-semibold">
-                          Ordered Handed Over
-                        </p>
+                        {orders.stepCount === 4 ? (
+                          <figure>
+                            <img
+                              className="w-4"
+                              src="/images/check.png"
+                              alt=""
+                            />
+                          </figure>
+                        ) : (
+                          <p className="text-xs font-semibold">
+                            Order handover
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
                 </div>
               );
             })}
+          {userOrders.length === 0 && (
+            <p className="font-semibold text-2xl mt-5">
+              You haven't order anything yet...
+            </p>
+          )}
         </div>
       </div>
     </div>
