@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AuthContext, CartContext, CartTotalContext } from "../core/context";
 import { IProducts } from "../shared/models/food.model";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
@@ -43,20 +44,27 @@ const Cart = () => {
   };
 
   const placeOrder = () => {
-    const orders: IOrder[] = [...cartItems].map((items) => {
-      return {
-        ...items,
-        userName: "yasin",
-        userEmail: "yasin@gmail.com",
-        step: "Ordered Online",
-        stepCount: 1,
-      };
-    });
-    axios.post("http://localhost:8080/addOrders", orders).then((res) => {
-      if (res.data.success) {
-        setCartItems([]);
-      }
-    });
+    if (authData) {
+      const orders: IOrder[] = [...cartItems].map((items) => {
+        return {
+          ...items,
+          userName: authData.userName,
+          userEmail: authData.userEmail,
+          step: "Ordered Online",
+          stepCount: 1,
+        };
+      });
+      axios
+        .post("http://localhost:8080/addOrders", {
+          items: orders,
+          userEmail: authData.userEmail,
+        })
+        .then((res) => {
+          if (res.data.success) {
+            setCartItems([]);
+          }
+        });
+    }
   };
 
   useEffect(() => {
@@ -133,7 +141,7 @@ const Cart = () => {
       )}
       {cartItems.length > 0 && (
         <div className="mt-10 flex justify-end">
-          <div className="bg-primary p-4 rounded-lg w-72">
+          <div className="bg-primary p-4 rounded-lg w-72 flex flex-col">
             <p className="font-semibold text-xl">
               Sub Total: {total?.subTotal}
             </p>
@@ -150,12 +158,12 @@ const Cart = () => {
                 Pay and Place The Order
               </button>
             ) : (
-              <button
-                className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
-                onClick={() => placeOrder()}
+              <Link
+                to="/gettingStarted"
+                className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5 text-center"
               >
                 Login
-              </button>
+              </Link>
             )}
           </div>
         </div>

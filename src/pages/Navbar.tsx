@@ -5,7 +5,7 @@ import { AuthContext, CartTotalContext } from "../core/context";
 
 const Navbar = () => {
   const { total } = useContext(CartTotalContext);
-  const { authData } = useContext(AuthContext);
+  const { authData, setAuthData } = useContext(AuthContext);
   return (
     <div className="bg-primary h-20 fixed top-0 w-full z-20">
       <div className="w-full h-full max-w-baseWidth mx-auto px-6 md:px-12 py-4 flex justify-between items-center space-x-5">
@@ -89,6 +89,10 @@ const Navbar = () => {
                       <button
                         className="w-full text-left px-3 py-2"
                         type="button"
+                        onClick={() => {
+                          localStorage.removeItem("authData");
+                          setAuthData(null);
+                        }}
                       >
                         Logout
                       </button>
@@ -97,7 +101,7 @@ const Navbar = () => {
                 </Transition>
               </Menu>
             ) : (
-              <button className="font-semibold">Login</button>
+              <Link to="/gettingStarted" className="font-semibold">Login</Link>
             )}
           </div>
         </div>

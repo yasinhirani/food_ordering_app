@@ -1,8 +1,8 @@
 import React from "react";
 
 export interface IAuthData {
-  email: string;
-  name: string;
+  userEmail: string;
+  userName: string;
   role: string;
 }
 export interface IAuthContext {
