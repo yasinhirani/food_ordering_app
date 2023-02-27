@@ -7,6 +7,7 @@ import foodServices from "../shared/services/food.service";
 import { v4 as uuidv4 } from "uuid";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
+import priceArray from "../shared/utils/priceArray";
 
 const AllProducts = () => {
   const { category } = useParams();
@@ -19,8 +20,8 @@ const AllProducts = () => {
 
   const getAllMeals = (category: string) => {
     foodServices.getAllMealsForSpecificCategory(category).then((res) => {
-      const updatedMealData = [...res.data.meals].map((data) => {
-        return { ...data, price: Math.floor(Math.random() * 41 + 10) * 10 };
+      const updatedMealData = [...res.data.meals].slice(0, 64).map((data, index) => {
+        return { ...data, price: priceArray[index] };
       });
       setAllMeals(updatedMealData);
     });
