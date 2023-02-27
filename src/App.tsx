@@ -83,6 +83,14 @@ function App() {
     return () => {};
   }, []);
 
+  useEffect(() => {
+    if (loading) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [loading]);
+
   return (
     <AuthContext.Provider value={AuthDataState}>
       <CartContext.Provider value={cartItemsState}>
@@ -91,9 +99,7 @@ function App() {
             <Interceptor />
             {loading && <Loader />}
             <div
-              className={`w-full h-full flex flex-col ${
-                loading ? "overflow-hidden" : "overflow-auto"
-              }`}
+              className="w-full h-full flex flex-col"
             >
               <Navbar />
               <div className="flex-grow h-full flex flex-col">

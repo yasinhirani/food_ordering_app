@@ -43,59 +43,61 @@ const Admin = () => {
   }, []);
 
   return (
-    <div className="flex-grow h-full mt-20">
+    <div className="flex-grow h-full mt-20 overflow-x-hidden">
       <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6">
         <h2 className="font-bold text-2xl">Admin Section</h2>
-        <table className="w-full mt-10 border border-collapse">
-          <thead>
-            <tr className="border">
-              <td className="font-bold thead">Name</td>
-              <td className="font-bold thead">Email</td>
-              <td className="font-bold thead">Product</td>
-              <td className="font-bold thead">Item Name</td>
-              <td className="font-bold thead">Quantity</td>
-              <td className="font-bold thead">Total</td>
-              <td className="font-bold thead">Step</td>
-              <td className="font-bold thead">Step Count</td>
-              <td className="font-bold thead">Next</td>
-            </tr>
-          </thead>
-          <tbody>
-            {allOrders &&
-              allOrders.map((item) => (
-                <tr key={Math.random()} className="border">
-                  <td className="tbody">
-                    <figure>
-                      <img src={item.itemImage} alt="" className="w-36 h-24" />
-                    </figure>
-                  </td>
-                  <td className="tbody">{item.userName}</td>
-                  <td className="tbody">{item.userEmail}</td>
-                  <td className="tbody">{item.itemName}</td>
-                  <td className="tbody">{item.quantity}</td>
-                  <td className="tbody">{item.total}</td>
-                  <td className="tbody">{item.step}</td>
-                  <td className="tbody">{item.stepCount}</td>
-                  <td className="tbody">
-                    <button
-                      className="disabled:cursor-not-allowed disabled:opacity-60 bg-red-600 text-white px-4 py-2 rounded-lg"
-                      disabled={item.stepCount === 4}
-                      onClick={() =>
-                        updateStep({
-                          orderId: item.orderId,
-                          step: item.step,
-                          stepCount: item.stepCount,
-                          userEmail: item.userEmail
-                        })
-                      }
-                    >
-                      Next Step
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <div className="overflow-x-auto">
+          <table className="w-full mt-10 border border-collapse">
+            <thead>
+              <tr className="border">
+                <td className="font-bold thead">Name</td>
+                <td className="font-bold thead">Email</td>
+                <td className="font-bold thead">Product</td>
+                <td className="font-bold thead">Item Name</td>
+                <td className="font-bold thead">Quantity</td>
+                <td className="font-bold thead">Total</td>
+                <td className="font-bold thead">Step</td>
+                <td className="font-bold thead">Step Count</td>
+                <td className="font-bold thead">Next</td>
+              </tr>
+            </thead>
+            <tbody>
+              {allOrders &&
+                allOrders.map((item) => (
+                  <tr key={Math.random()} className="border">
+                    <td className="tbody">
+                      <figure>
+                        <img src={item.itemImage} alt="" className="w-36 min-w-[9rem] h-24" />
+                      </figure>
+                    </td>
+                    <td className="tbody">{item.userName}</td>
+                    <td className="tbody">{item.userEmail}</td>
+                    <td className="tbody">{item.itemName}</td>
+                    <td className="tbody">{item.quantity}</td>
+                    <td className="tbody">{item.total}</td>
+                    <td className="tbody">{item.step}</td>
+                    <td className="tbody">{item.stepCount}</td>
+                    <td className="tbody">
+                      <button
+                        className="disabled:cursor-not-allowed disabled:opacity-60 bg-red-600 text-white px-4 py-2 rounded-lg whitespace-nowrap"
+                        disabled={item.stepCount === 4}
+                        onClick={() =>
+                          updateStep({
+                            orderId: item.orderId,
+                            step: item.step,
+                            stepCount: item.stepCount,
+                            userEmail: item.userEmail
+                          })
+                        }
+                      >
+                        Next Step
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
