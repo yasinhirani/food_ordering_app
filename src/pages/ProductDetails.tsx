@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from "uuid";
 import { CartContext, CartTotalContext } from "../core/context";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
+import { toast } from "react-toastify";
+import toastConfig from "../shared/utils/toastifyConfig";
 
 const ProductDetails = () => {
   const { id, price } = useParams();
@@ -47,7 +49,10 @@ const ProductDetails = () => {
         copyCart[existingIndex].quantity > 4 ||
         copyCart[existingIndex].quantity + quantity > 5
       ) {
-        console.log("Only 5 quantity for a product can be added at a time");
+        toast.warning(
+          "Only 5 quantity for a product can be added at a time",
+          toastConfig
+        );
       } else {
         copyCart[existingIndex].quantity += quantity;
         copyCart[existingIndex].total =

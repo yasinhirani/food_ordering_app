@@ -1,10 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { AuthContext, CartContext, CartTotalContext } from "../core/context";
 import { IOrder } from "../shared/models/orders.model";
 import OrdersService from "../shared/services/orders.service";
 import cartQuantitiesTotal from "../shared/utils/cartQuantitiesTotal";
 import cartSubTotal from "../shared/utils/cartSubTotal";
+import toastConfig from "../shared/utils/toastifyConfig";
 
 const Cart = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
@@ -57,10 +59,11 @@ const Cart = () => {
             setCartItems([]);
             navigate("/");
             localStorage.setItem("products", JSON.stringify([]));
+            toast.success(res.data.message, toastConfig);
           }
         });
       } else {
-        console.log("Please select payment method");
+        toast.success("Please select payment method", toastConfig);
       }
     }
   };

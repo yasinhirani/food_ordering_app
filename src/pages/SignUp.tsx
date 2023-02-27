@@ -1,6 +1,8 @@
 import { Formik, Form, Field } from "formik";
+import { toast } from "react-toastify";
 import authServices from "../core/services/auth.service";
 import RegisterValidation from "../core/validations/resgiter.validation";
+import toastConfig from "../shared/utils/toastifyConfig";
 
 interface IRegister {
   userName: string;
@@ -19,7 +21,11 @@ const SignUp = () => {
     authServices
       .register(values.userName, values.email, values.password)
       .then((res) => {
-        console.log(res.data.message);
+        if (res.data.success) {
+          toast.success(res.data.message, toastConfig);
+        } else {
+          toast.error(res.data.message, toastConfig);
+        }
       });
   };
   return (

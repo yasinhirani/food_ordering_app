@@ -1,9 +1,11 @@
 import { Formik, Field, Form } from "formik";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { AuthContext } from "../core/context";
 import authServices from "../core/services/auth.service";
 import LoginValidation from "../core/validations/login.validation";
+import toastConfig from "../shared/utils/toastifyConfig";
 
 interface ILogin {
   email: string;
@@ -24,18 +26,17 @@ const Login = () => {
       .login(values.email.toLowerCase(), values.password)
       .then((res) => {
         if (res.data.success) {
-          // toast.success("Login Successful", ToastConfig);
-          // localStorage.setItem("access_token", res.data.access_token);
+          toast.success("Login Successful", toastConfig);
           localStorage.setItem("authData", JSON.stringify(res.data.authData));
           setAuthData(res.data.authData);
           navigate("/");
         } else {
-          console.log(res.data.message);
+          toast.error(res.data.message, toastConfig);
         }
       })
       .catch((err) => {
         if (err.code === "ERR_NETWORK") {
-          console.log("server issue");
+          toast.error("server issue", toastConfig);
         }
       });
   };
