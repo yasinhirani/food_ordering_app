@@ -8,6 +8,31 @@
 .tbody {
   @apply p-3;
 }
+.cart-table > thead > tr > .thead:nth-child(1),
+.cart-table > tbody > tr > .tbody:nth-child(1) {
+  min-width: 200px;
+}
+.cart-table > thead > tr > .thead:nth-child(2),
+.cart-table > tbody > tr > .tbody:nth-child(2) {
+  min-width: 180px;
+}
+.cart-table > thead > tr > .thead:nth-child(3),
+.cart-table > tbody > tr > .tbody:nth-child(3) {
+  min-width: 120px;
+}
+.cart-table > thead > tr > .thead:nth-child(4),
+.cart-table > tbody > tr > .tbody:nth-child(4) {
+  min-width: 120px;
+}
+.cart-table > thead > tr > .thead:nth-child(5),
+.cart-table > tbody > tr > .tbody:nth-child(5) {
+  min-width: 120px;
+}
+.cart-table > thead > tr > .thead:nth-child(6),
+.cart-table > tbody > tr > .tbody:nth-child(6) {
+  min-width: 120px;
+}
+
 .user-order-grid {
   grid-template-columns: repeat(4, minmax(0, auto));
 }
