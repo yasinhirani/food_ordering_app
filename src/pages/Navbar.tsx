@@ -1,9 +1,10 @@
 import { Menu, Transition } from "@headlessui/react";
 import { Fragment, useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext, CartTotalContext } from "../core/context";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const { total } = useContext(CartTotalContext);
   const { authData, setAuthData } = useContext(AuthContext);
   return (
@@ -99,6 +100,7 @@ const Navbar = () => {
                         onClick={() => {
                           localStorage.removeItem("authData");
                           setAuthData(null);
+                          navigate("/");
                         }}
                       >
                         Logout
