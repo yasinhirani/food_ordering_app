@@ -11,6 +11,7 @@ import Footer from "../components/Footer";
 import MealCard from "../components/MealCard";
 import { toast } from "react-toastify";
 import toastConfig from "../shared/utils/toastifyConfig";
+import priceArray from "../shared/utils/priceArray";
 
 const HomePage = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
@@ -79,13 +80,13 @@ const HomePage = () => {
       const mealData =
         res.data.meals.length > 7 ? res.data.meals.slice(0, 8) : [];
       if (res.data.meals.length > 7) {
-        const updatedMealData = [...mealData].map((data) => {
-          return { ...data, price: Math.floor(Math.random() * 41 + 10) * 10 };
+        const updatedMealData = [...mealData].map((data, index) => {
+          return { ...data, price: priceArray[index] };
         });
         setMealForCategory(updatedMealData);
       } else {
-        const updatedMealData = [...res.data.meals].map((data) => {
-          return { ...data, price: Math.floor(Math.random() * 41 + 10) * 10 };
+        const updatedMealData = [...res.data.meals].map((data, index) => {
+          return { ...data, price: priceArray[index] };
         });
         setMealForCategory(updatedMealData);
       }
