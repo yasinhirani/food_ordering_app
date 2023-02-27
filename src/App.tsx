@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import "./App.css";
 import Loader from "./core/components/Loader";
 import {
@@ -27,6 +28,7 @@ import {
 import NotFound from "./pages/NotFound";
 import { IAuthData } from "./shared/models/auth.model";
 import { ICartTotal, IProducts } from "./shared/models/food.model";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [cartItems, setCartItems] = useState<IProducts[]>([]);
@@ -121,6 +123,7 @@ function App() {
                 </Routes>
               </div>
             </div>
+            <ToastContainer />
           </LoadingContext.Provider>
         </CartTotalContext.Provider>
       </CartContext.Provider>

@@ -9,6 +9,8 @@ import cartSubTotal from "../shared/utils/cartSubTotal";
 import { v4 as uuidv4 } from "uuid";
 import Footer from "../components/Footer";
 import MealCard from "../components/MealCard";
+import { toast } from "react-toastify";
+import toastConfig from "../shared/utils/toastifyConfig";
 
 const HomePage = () => {
   const { cartItems, setCartItems } = useContext(CartContext);
@@ -53,7 +55,10 @@ const HomePage = () => {
     } else {
       const copyCart = [...cartItems];
       if (copyCart[existingIndex].quantity > 4) {
-        console.log("Only 5 quantity for a product can be added at a time");
+        toast.warning(
+          "Only 5 quantity for a product can be added at a time",
+          toastConfig
+        );
       } else {
         copyCart[existingIndex].quantity += 1;
         copyCart[existingIndex].total =
@@ -117,16 +122,23 @@ const HomePage = () => {
       {/* Start Hero Section */}
       <div className="bg-primary">
         <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 flex justify-between items-center space-x-5">
-          <div className="space-y-10">
-            <h1 className="font-extrabold text-4xl lg:text-5xl lg:w-[20ch] tracking-wider lg:leading-[60px]">
+          <div className="sm:space-y-10">
+            <h1 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl lg:w-[20ch] tracking-wider lg:leading-[60px]">
               Just don’t wait for the right moment, order your food now.
             </h1>
+            <figure className="w-full min-w-[300px] block sm:hidden">
+              <img
+                className="w-full h-full"
+                src="/images/hero_illustration.png"
+                alt=""
+              />
+            </figure>
             <button
               onClick={() =>
                 menuRef.current &&
                 menuRef.current.scrollIntoView({ behavior: "smooth" })
               }
-              className="bg-red-600 px-4 py-3 rounded-md hover:rounded-3xl transition-all text-white w-52"
+              className="bg-red-600 px-4 py-3 rounded-md hover:rounded-3xl transition-all text-white w-full sm:w-52"
             >
               Order Now
             </button>
@@ -148,20 +160,32 @@ const HomePage = () => {
         </p>
         <div className="flex justify-evenly items-center space-x-5 w-full">
           <figure className="flex flex-col items-center">
-            <img src="/images/order_online.png" alt="Order Online" />
-            <figcaption className="font-bold text-sm mt-3">
+            <img
+              className="w-full max-w-[80px]"
+              src="/images/order_online.png"
+              alt="Order Online"
+            />
+            <figcaption className="font-bold text-sm mt-3 text-center">
               Order Online
             </figcaption>
           </figure>
           <figure className="flex flex-col items-center">
-            <img src="/images/order_preperation.png" alt="Order Preparation" />
-            <figcaption className="font-bold text-sm mt-3">
+            <img
+              className="w-full max-w-[80px]"
+              src="/images/order_preperation.png"
+              alt="Order Preparation"
+            />
+            <figcaption className="font-bold text-sm mt-3 text-center">
               Order Preparation
             </figcaption>
           </figure>
           <figure className="flex flex-col items-center">
-            <img src="/images/order_handover.png" alt="Order Handover" />
-            <figcaption className="font-bold text-sm mt-3">
+            <img
+              className="w-full max-w-[80px]"
+              src="/images/order_handover.png"
+              alt="Order Handover"
+            />
+            <figcaption className="font-bold text-sm mt-3 text-center">
               Order Handover
             </figcaption>
           </figure>
