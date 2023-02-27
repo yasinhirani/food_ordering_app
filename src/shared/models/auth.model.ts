@@ -12,8 +12,13 @@ export interface IAuthContext {
   setAuthData: React.Dispatch<React.SetStateAction<IAuthData | null>>;
 }
 
+export interface ILoadingContext {
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface ILoginRes
-  extends IBase<{ success: boolean; message: string, authData: IAuthData }> {}
+  extends IBase<{ success: boolean; message: string; authData: IAuthData }> {}
 
 export interface IRegisterRes
   extends IBase<{ success: boolean; message: string }> {}

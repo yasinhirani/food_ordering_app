@@ -1,16 +1,17 @@
 import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../core/context";
+import { AuthContext, LoadingContext } from "../core/context";
 import { IUserOrdersDetail } from "../shared/models/orders.model";
 import OrdersService from "../shared/services/orders.service";
 
 const MyOrders = () => {
   const { authData } = useContext(AuthContext);
+  const { loading } = useContext(LoadingContext);
 
   const [userOrders, setUserOrders] = useState<IUserOrdersDetail[]>([]);
 
   const getUserOrders = () => {
     if (authData) {
-      OrdersService.getAllUserOrders(authData?.userEmail).then((res) => {
+      OrdersService.getAllUserOrders().then((res) => {
         setUserOrders(res.data.orders);
       });
     }
@@ -173,7 +174,7 @@ const MyOrders = () => {
                 </div>
               );
             })}
-          {userOrders.length === 0 && (
+          {!loading && userOrders.length === 0 && (
             <p className="font-semibold text-2xl mt-5">
               You haven't order anything yet...
             </p>
