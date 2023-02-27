@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext, CartContext, CartTotalContext } from "../core/context";
 import { IOrder } from "../shared/models/orders.model";
 import OrdersService from "../shared/services/orders.service";
@@ -11,7 +11,10 @@ const Cart = () => {
   const { total, setTotal } = useContext(CartTotalContext);
   const { authData } = useContext(AuthContext);
 
+  const navigate = useNavigate();
+
   const [initialRender, setInitialRender] = useState<boolean>(true);
+  const [codSelected, setCodSelected] = useState<boolean>(false);
 
   const increaseQuantity = (itemId: number) => {
     const copyCart = [...cartItems];
@@ -38,20 +41,27 @@ const Cart = () => {
 
   const placeOrder = () => {
     if (authData) {
-      const orders: IOrder[] = [...cartItems].map((items) => {
-        return {
-          ...items,
-          userName: authData.userName,
-          userEmail: authData.userEmail,
-          step: "Ordered Online",
-          stepCount: 1,
-        };
-      });
-      OrdersService.placeOrder(orders).then((res) => {
-        if (res.data.success) {
-          setCartItems([]);
-        }
-      });
+      if (codSelected) {
+        const orders: IOrder[] = [...cartItems].map((items) => {
+          return {
+            ...items,
+            userName: authData.userName,
+            userEmail: authData.userEmail,
+            step: "Ordered Online",
+            stepCount: 1,
+            time: new Date(),
+          };
+        });
+        OrdersService.placeOrder(orders).then((res) => {
+          if (res.data.success) {
+            setCartItems([]);
+            navigate("/");
+            localStorage.setItem("products", JSON.stringify([]));
+          }
+        });
+      } else {
+        console.log("Please select payment method");
+      }
     }
   };
 
@@ -139,12 +149,28 @@ const Cart = () => {
               </p>
             )}
             {authData !== null ? (
-              <button
-                className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
-                onClick={() => placeOrder()}
-              >
-                Pay and Place The Order
-              </button>
+              <>
+                <div className="mt-5">
+                  <input
+                    type="radio"
+                    name="cashOnDelivery"
+                    id="cashOnDelivery"
+                    onChange={() => setCodSelected(true)}
+                  />
+                  <label
+                    htmlFor="cashOnDelivery"
+                    className="ml-2 font-semibold"
+                  >
+                    Cash On Delivery
+                  </label>
+                </div>
+                <button
+                  className="bg-red-600 text-white font-semibold w-full px-4 py-2 rounded-lg mt-5"
+                  onClick={() => placeOrder()}
+                >
+                  Place The Order
+                </button>
+              </>
             ) : (
               <Link
                 to="/gettingStarted"

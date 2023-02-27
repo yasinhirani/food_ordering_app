@@ -12,10 +12,8 @@ const getAllOrders = (): Promise<IAllOrdersRes> => {
   return privateAxios.get("/getAllOrders");
 };
 
-const getAllUserOrders = (email: string): Promise<IUserOrdersRes> => {
-  return privateAxios.post("/getUserOrders", {
-    userEmail: email,
-  });
+const getAllUserOrders = (): Promise<IUserOrdersRes> => {
+  return privateAxios.get("/getUserOrders");
 };
 
 const placeOrder = (items: IOrder[]): Promise<IAddOrdersRes> => {

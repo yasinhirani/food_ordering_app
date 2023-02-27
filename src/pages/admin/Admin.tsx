@@ -17,6 +17,7 @@ const Admin = () => {
         orderId: values.orderId,
         step: "Order Preparation",
         stepCount: 2,
+        userEmail: values.userEmail
       }).then(() => getAllOrders());
     }
     if (values.stepCount === 2) {
@@ -24,6 +25,7 @@ const Admin = () => {
         orderId: values.orderId,
         step: "Ready for pickup",
         stepCount: 3,
+        userEmail: values.userEmail,
       }).then(() => getAllOrders());
     }
     if (values.stepCount === 3) {
@@ -31,6 +33,7 @@ const Admin = () => {
         orderId: values.orderId,
         step: "Order hand over",
         stepCount: 4,
+        userEmail: values.userEmail,
       }).then(() => getAllOrders());
     }
   };
@@ -42,7 +45,7 @@ const Admin = () => {
   return (
     <div className="flex-grow h-full mt-20">
       <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6">
-        <h2>Admin Section</h2>
+        <h2 className="font-bold text-2xl">Admin Section</h2>
         <table className="w-full mt-10 border border-collapse">
           <thead>
             <tr className="border">
@@ -82,6 +85,7 @@ const Admin = () => {
                           orderId: item.orderId,
                           step: item.step,
                           stepCount: item.stepCount,
+                          userEmail: item.userEmail
                         })
                       }
                     >

@@ -30,12 +30,14 @@ export interface IOrder extends IProducts {
   userEmail: string;
   step: string;
   stepCount: number;
+  time: Date;
 }
 
 export interface IUpdateStep {
   orderId: string;
   step: string;
   stepCount: number;
+  userEmail: string;
 }
 
 export interface IAllOrdersRes extends IBase<IAllOrders[]> {}

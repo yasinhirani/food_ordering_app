@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { IAuthContext } from "../shared/models/auth.model";
+import { IAuthContext, ILoadingContext } from "../shared/models/auth.model";
 import {
   ICartItemsContext,
   ICartTotalContext,
@@ -16,4 +16,8 @@ export const CartTotalContext = createContext<ICartTotalContext>({
 export const AuthContext = createContext<IAuthContext>({
   authData: null,
   setAuthData: () => {},
+});
+export const LoadingContext = createContext<ILoadingContext>({
+  loading: false,
+  setLoading: () => {},
 });

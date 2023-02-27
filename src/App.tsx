@@ -2,11 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import "./App.css";
+import Loader from "./core/components/Loader";
 import {
   ProtectedRoute,
   ProtectedRouteLogin,
 } from "./core/components/ProtectedRoute";
-import { AuthContext, CartContext, CartTotalContext } from "./core/context";
+import {
+  AuthContext,
+  CartContext,
+  CartTotalContext,
+  LoadingContext,
+} from "./core/context";
+import { Interceptor } from "./core/services/core.service";
 import Admin from "./pages/admin/Admin";
 import {
   AllProducts,
@@ -25,6 +32,7 @@ function App() {
   const [cartItems, setCartItems] = useState<IProducts[]>([]);
   const [total, setTotal] = useState<ICartTotal | null>(null);
   const [authData, setAuthData] = useState<IAuthData | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const cartItemsState = useMemo(
     () => ({
@@ -50,6 +58,14 @@ function App() {
     [authData]
   );
 
+  const LoadingState = useMemo(
+    () => ({
+      loading,
+      setLoading,
+    }),
+    [loading]
+  );
+
   useEffect(() => {
     if (localStorage.getItem("products")) {
       const products = JSON.parse(localStorage.products);
@@ -69,35 +85,43 @@ function App() {
     <AuthContext.Provider value={AuthDataState}>
       <CartContext.Provider value={cartItemsState}>
         <CartTotalContext.Provider value={cartTotalState}>
-          <div className="w-full h-full flex flex-col">
-            <Navbar />
-            <div className="flex-grow h-full flex flex-col">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route
-                  path="/gettingStarted"
-                  element={<ProtectedRouteLogin Component={Auth} />}
-                />
-                <Route
-                  path="/allProducts/:category"
-                  element={<AllProducts />}
-                />
-                <Route
-                  path="/productDetail/:id/:price"
-                  element={<ProductDetails />}
-                />
-                <Route path="/cart" element={<Cart />} />
-                <Route
-                  path="/myOrders"
-                  element={<ProtectedRoute Component={MyOrders} />}
-                />
-                {authData !== null && authData.role === "admin" && (
-                  <Route path="/admin" element={<Admin />} />
-                )}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+          <LoadingContext.Provider value={LoadingState}>
+            <Interceptor />
+            {loading && <Loader />}
+            <div
+              className={`w-full h-full flex flex-col ${
+                loading ? "overflow-hidden" : "overflow-auto"
+              }`}
+            >
+              <Navbar />
+              <div className="flex-grow h-full flex flex-col">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route
+                    path="/gettingStarted"
+                    element={<ProtectedRouteLogin Component={Auth} />}
+                  />
+                  <Route
+                    path="/allProducts/:category"
+                    element={<AllProducts />}
+                  />
+                  <Route
+                    path="/productDetail/:id/:price"
+                    element={<ProductDetails />}
+                  />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route
+                    path="/myOrders"
+                    element={<ProtectedRoute Component={MyOrders} />}
+                  />
+                  {authData !== null && authData.role === "admin" && (
+                    <Route path="/admin" element={<Admin />} />
+                  )}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
             </div>
-          </div>
+          </LoadingContext.Provider>
         </CartTotalContext.Provider>
       </CartContext.Provider>
     </AuthContext.Provider>
