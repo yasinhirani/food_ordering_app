@@ -63,7 +63,7 @@ const Cart = () => {
           }
         });
       } else {
-        toast.success("Please select payment method", toastConfig);
+        toast.warning("Please select payment method", toastConfig);
       }
     }
   };

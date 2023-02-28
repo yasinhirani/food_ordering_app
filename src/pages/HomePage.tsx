@@ -19,7 +19,7 @@ const HomePage = () => {
 
   const [allCategories, setAllCategories] = useState<ICategory[]>([]);
   const [mealForCategory, setMealForCategory] = useState<IMeal[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Beef");
+  const [selectedCategory, setSelectedCategory] = useState<string>("Chicken");
   const [initialRender, setInitialRender] = useState<boolean>(true);
 
   const menuRef = useRef<HTMLDivElement>(null);

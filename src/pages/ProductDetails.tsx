@@ -90,8 +90,8 @@ const ProductDetails = () => {
   return (
     <div className="flex-grow h-full mt-20">
       <div className="w-full max-w-baseWidth mx-auto px-6 md:px-12 py-6 flex justify-center items-center">
-        <div className="flex space-x-8">
-          <figure className="w-96">
+        <div className="flex flex-col sm:flex-row sm:space-x-8 space-y-8 sm:space-y-0">
+          <figure className="w-full sm:w-96">
             <img
               src={mealDetails?.meals[0].strMealThumb}
               alt=""
